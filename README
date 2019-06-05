@@ -1,0 +1,83 @@
+# Evaluation of network architecture and data augmentation methods for deep learning in chemogenomics
+------------------------------------------------
+
+This is the code to reproduce all findings from the following paper:
+
+Benoit, Playe and Véronique, Stoven. "Evaluation of network architecture and data augmentation methods for deep learning in chemogenomics". 
+https://www.biorxiv.org/content/
+
+"
+Among virtual screening methods that have been developed to facilitate the drug discovery process, chemogenomics presents the particularity to tackle the question of predicting ligands for proteins, at at scales both in the protein and chemical spaces. Therefore, in addition to to predict drug candidates for a given therapeutic protein target, like more classical ligand-based or receptor-based methods do, chemogenomics can also predict off-targets at the proteome level, and therefore, identify potential side-effects or drug repositioning opportunities.
+In this study, we study and compare machine-learning and deep learning approaches for chemogenomics, that are applicable to screen large sets of compounds against large sets of druggable proteins. 
+State-of-the-art drug chemogenomics methods rely on expert-based chemical and protein descriptors or similarity measures. The recent development of deep learning approaches enabled to design algorithms that learn numerical abstract representations of molecular graphs and protein sequences in an end-to-end fashion, i.e., so that the learnt features optimise the objective function of the drug-target interaction prediction task. 
+
+In this paper, we address drug-target interaction prediction at the druggable proteome-level, with what we define as the chemogenomic neuron network. This network consists of a feed-forward neuron network taking as input the combination of molecular and protein representations learnt by molecular graph and protein sequence encoders. We first propose a standard formulation of this chemogenomic neuron network.
+Then, we compare the performances of the standard chemogenomic network to reference deep learning or shallow (machine-learning without deep learning) methods.
+In particular, we show that such a representation learning approach is competitive with state-of-the-art chemogenomics with shallow methods, but not ultimately superior.
+We evaluate the most promising neuron network architectures and data augmentation techniques, such as multi-view and transfer learning, to improve the prediction performance of the chemogenomic network.
+Our results shed new insights on the design of chemogenomics approaches based on representation learning algorithms. Most importantly, we conclude from our observations that a promising research direction is to integrate heterogeneous sources of data such as various bioactivity datasets, or independently, multiple molecule and protein attribute views, instead of focusing on sophisticated, yet intuitively relevant, encoder's neuron network architecture.
+"
+
+The original data and result files are available at: http://members.cbio.mines-paristech.fr/~bplaye/NNk_chemo.zip
+
+
+
+************************
+Required Python Packages
+************************
+
+numpy (>= 1.15.4)
+
+scipy (>= 1.2.1)
+
+matplotlib (>= 3.0.2)
+
+seaborn (>= 0.9.0)
+
+pandas (>= 0.24.1)
+
+sklearn (>= 0.20.2)
+
+keras (>= 2.2.4)
+
+tensorflow (>= 1.12.0)
+
+
+**************
+Archive Folder
+**************
+
+> src: contains all experiments classes run for the paper.
+
+> data: contains all data files required for the study. (available at: http://members.cbio.mines-paristech.fr/~bplaye/NNk_chemo.zip)
+
+> results: contains all result files required to display the performance of all methods via analysis.ipynb . (available at: http://members.cbio.mines-paristech.fr/~bplaye/NNk_chemo.zip)
+
+> analysis.ipynb : ipython notebook to observe the results of the study.
+
+
+***********
+Run scripts
+***********
+
+Run the python notebooks to reproduce all figures and table.
+
+After downloading the original data, any third parties can reproduce our results. 
+In the following, we give examples of command line to lunch the methods used in the study. 
+Explanations of command line options can be found in the source code of the corresponding methods.
+
+In particular, the NRLMF method (taken from the PyDTI package: https://github.com/stephenliu0423/PyDTI) can be lunch via the following command line:
+python src/baselines/NMRLF.py -db DrugBankH -nf 5 -tef 0 -valf 1 -set 1 -rtr 5 -rte 5
+
+The kronSVM method can be lunch via the following command line:
+python src/baselines/SVM_on_handcrafted_features.py -db DrugBankH -nf 5 -tef 0 -valf 1 -set 1 -rtr 5 -rte 5 -cvv
+
+The feed-forward neuron network method can be lunch via the following command line:
+python src/baselines/FNN_on_handcrafted_features.py -db DrugBankH -nf 5 -tef 3 -valf 4 -set 1 -rtr 5 -rte 5 -gen -ne 100 -ilr 0.001 -l 2000 1000 100 -d 0.0 -r 0.0 -bs 100 -lr '{"name": "LearningRateScheduler", "rate": 0.9}' -eap 20 -bn -s
+
+The chemogenomic neuron network method on the DrugBank-based datasets can be lunch via the following command line:
+python src/experiments/mol_experiments.py -db DrugBankHstand -sm -nf 5 -tef 2 -valf 3 -set 1 -rtr 5 -rte 2 --batch_size 50 --n_epochs 100 --init_lr 0.001 --patience_early_stopping 10 --lr_scheduler '{"name": "LearningRateScheduler", "rate": 0.9}' --pred_layers 100 --pred_dropout 0 --pred_reg 0 --seq_len 0 --p_encoder '{"name": "conv", "n_steps": 3, "nb_conv_filters": 100, "filter_size": 8, "conv_strides": 3, "hand_crafted_features": 0}' --p_dropout 0 --p_reg 0 -pbn  --m_n_att_atom 0 --m_n_steps 3 --m_agg_nei '{"name": "standard", "n_filters": 100, "n_heads": 5}' --m_agg_all '{"name": "sum", "pool_name": "standard", "reg": 0, "drop": 0, "n_atoms": 0}' --m_combine '{"name": "sum", "hand_crafted_features": 0}' -md 0 -mr 0 -mbn  --dti_joint '{"name": "concat", "hand_crafted_features": 0, "reg": 0}' --pred_batchnorm -t 3 -wgen 10 -qgen 100
+
+
+Our chemogenomic neuron network is a very modular framework whose molecular graph encoder, protein sequence encoder, Comb operation and MLP can be changed based on the options included in their respective source files src/architectures/mol_architectures.py, src/architectures/prot_architectures.py, src/architectures/dti_architectures.py, src/architectures/pred_architectures.py.
+
