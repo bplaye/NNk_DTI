@@ -18,7 +18,7 @@ We evaluate the most promising neuron network architectures and data augmentatio
 Our results shed new insights on the design of chemogenomics approaches based on representation learning algorithms. Most importantly, we conclude from our observations that a promising research direction is to integrate heterogeneous sources of data such as various bioactivity datasets, or independently, multiple molecule and protein attribute views, instead of focusing on sophisticated, yet intuitively relevant, encoder's neuron network architecture.
 "
 
-The original data and result files are available at: http://members.cbio.mines-paristech.fr/~bplaye/NNk_chemo.zip
+The original data and result files are available at: http://members.cbio.mines-paristech.fr/~bplaye/NNk_DTI.zip
 
 
 
@@ -49,9 +49,9 @@ Archive Folder
 
 > src: contains all experiments classes run for the paper.
 
-> data: contains all data files required for the study. (available at: http://members.cbio.mines-paristech.fr/~bplaye/NNk_chemo.zip)
+> data: contains all data files required for the study. (available at: http://members.cbio.mines-paristech.fr/~bplaye/NNk_DTI.zip)
 
-> results: contains all result files required to display the performance of all methods via analysis.ipynb . (available at: http://members.cbio.mines-paristech.fr/~bplaye/NNk_chemo.zip)
+> results: contains all result files required to display the performance of all methods via analysis.ipynb . (available at: http://members.cbio.mines-paristech.fr/~bplaye/NNk_DTI.zip)
 
 > analysis.ipynb : ipython notebook to observe the results of the study.
 
